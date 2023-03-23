@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Spring Security Example</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<!--top bar-->
+<nav class="navbar navbar-dark bg-dark">
+   <span class="navbar-text text-white">
+        <strong> <span id ="current_user"></span> </strong>
+     with roles:
+        <span id="roles"></span>
+   </span>
+    <a class = "nav-link text-muted" th:href="@{/logout}">Logout </a>
+</nav>
+
+<div class="container-fluid bg-light min-vh-100">
+    <div class="row">
+       <!-- left bar-->
+        <div class = "col-2 bg-white p-0 min-vh-100">
+            <nav class="nav nav-pills flex-column">
+                <br>
+                <nav class="nav-item " sec:authorize="hasAnyRole('ROLE_ADMIN')">
+                    <a class="nav-link active"  th:href="@{/admin}">Admin</a>
+                </nav>
+                <nav class="nav-item">
+                    <a class="nav-link" th:href = "@{/user}">User</a>
+                </nav>
+            </nav>
+        </div>
+
+        <!--above table-->
+        <div class = "col-10 bg-light">
+            <div class = "row">
+                <div class = "col-11 mx-auto bg-light ">
+                    <br>
+                    <h2> <p class="text-xl">Admin panel</p> </h2>
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#Users" id="usersBtn">Users Table</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#Add" id="addBtn">New user</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class = "tab-content">
+                <div class = "tab-pane container-fluid active" id="Users">
+                    <div class = "row">
+                        <div class = "col-11 mx-auto border bg-light ">
+                            <nav class="navbar navbar-light bg-light">
+                        <span class="navbar-text text-dark text-left font-weight-bold">
+                        All users
+                        </span>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class = "row">
+                        <div class = "col-11 mx-auto border bg-white">
+
+                          <!--  table-->
+                            <table class="table table-striped bg-white" id="data">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Age</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+
+
+                            <!--edit modal-->
+                            <div class = "editForm">
+                                <div class = "modal fade" id="editModal"  tabindex="-1">
+                                    <div class = "modal-dialog">
+                                        <div class = "modal-content">
+                                            <div class = "modal-header">
+                                                <h5>Edit user</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> </button>
+                                                <span aria-hidden="true">&times;</span>
+                                            </div>
+                                            <div class ="modal-body mx-auto text-center">
+                                                <div class = "form-group">
+                                                    <strong><label for = "idEdit">Id</label> </strong>
+                                                    <input type = "number" class="form-control"  id="idEdit" name="id" readonly>
+                                                </div>
+                                                <div class = "form-group">
+                                                    <strong><label for = "firstnameEdit">First Name </label> </strong>
+                                                    <input type = "text" class="form-control"  id="firstnameEdit" name="firstName">
+                                                </div>
+                                                <div class = "form-group">
+                                                    <strong><label for = "lastnameEdit">Last Name </label> </strong>
+                                                    <input type = "text" class="form-control"  id="lastnameEdit" name="lastName">
+                                                </div>
+                                                <div class ="form-group">
+                                                    <strong><label for = "ageEdit">Age</label> </strong>
+                                                    <input type = "number" class="form-control"  id="ageEdit" name="ageEdit">
+                                                </div>
+                                                <div class = "form-group">
+                                                    <strong><label for = "emailEdit">Email </label> </strong>
+                                                    <input type = "text" class="form-control"  id="emailEdit" name="emailEdit">
+                                                </div>
+                                                <div class = "form-group">
+                                                    <strong><label for = "passwordEdit">Password </label> </strong>
+                                                    <input type = "password" required class="form-control" placeholder="" id="passwordEdit" name="password">
+                                                </div>
+                                                <div class = "form-group ">
+                                                    <strong><label>Roles</label> </strong>
+                                                    <select class="custom-select" id = "editRoles" name = "roles" multiple size="2">
+                                                        <option>USER</option>
+                                                        <option>ADMIN</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="editClose">Close</button>
+                                                <button type="submit" class="btn btn-primary editSuccess" >Edit</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+
+                            <!--delete modal-->
+                            <div class = "deleteForm">
+                                <div class = "modal fade" id="deleteModal"  tabindex="-1">
+                                    <div class = "modal-dialog">
+                                        <div class = "modal-content">
+                                            <div class = "modal-header">
+                                                <h5>Delete user</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> </button>
+                                                <span aria-hidden="true">&times;</span>
+                                            </div>
+                                            <div class ="modal-body mx-auto text-center">
+                                                <div class = "form-group ">
+                                                    <strong><label for ="idDelete">Id</label> </strong>
+                                                    <input type = "number" class="form-control"  id="idDelete" name="id" readonly>
+                                                </div>
+                                                <div class = "form-group ">
+                                                    <strong><label for = "firstNameDelete">First Name </label> </strong>
+                                                    <input type = "text" class="form-control"  id="firstNameDelete" name="firstName" readonly>
+                                                </div>
+                                                <div class = "form-group ">
+                                                    <strong><label for = "lastnameDelete">Last Name </label> </strong>
+                                                    <input type = "text" class="form-control"  id="lastnameDelete" name="lastName" readonly>
+                                                </div>
+                                                <div class ="form-group ">
+                                                    <strong><label for = "ageDelete">Age</label> </strong>
+                                                    <input type = "number" class="form-control"  id="ageDelete" name="age" readonly>
+                                                </div>
+                                                <div class = "form-group ">
+                                                    <strong><label for = "emailDelete">Email </label> </strong>
+                                                    <input type = "text" class="form-control"  id="emailDelete" name="email" readonly>
+                                                </div>
+                                                <div class = "form-group ">
+                                                    <strong><label>rolesDelete</label> </strong>
+                                                    <select multiple class="form-control " size = "1" id = "rolesDelete" name = "roles" readonly >
+                                                        <option readonly >ADMIN</option>
+                                                        <option readonly>USER</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="deleteClose">Close</button>
+                                                <button type="submit" class="btn btn-danger deleteSuccess"  >Delete</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </tr>
+                            </tbody>
+                            <br>
+                            </table>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+
+                <!--add user-->
+                <div class = "tab-pane container-fluid" id="Add">
+                    <div class = "row">
+                        <div class = "col-11 mx-auto border bg-light ">
+                            <nav class="navbar navbar-light bg-light">
+                        <span class="navbar-text text-dark text-left font-weight-bold">
+                        Add new user
+                        </span>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class = "row">
+                        <div class = "col-11 mx-auto text-center border align-items-center bg-white">
+
+                            <div class = "form-group ">
+                                <div class = "col-3 mx-auto">
+                                    <strong><label for = "addFirstName">First Name </label> </strong>
+                                    <input type = "text" class="form-control"  placeholder="First name" id="addFirstName">
+                                </div>
+                            </div>
+                            <div class = "form-group">
+                                <div class = "col-3 mx-auto">
+                                    <strong><label for = "addLastName">Last Name </label> </strong>
+                                    <input type = "text" class="form-control"  placeholder="Lastname" id="addLastName">
+                                </div>
+                            </div>
+                            <div class ="form-group">
+                                <div class = "col-3 mx-auto">
+                                    <strong><label for = "addAge">Age</label> </strong>
+                                    <input type = "number" class="form-control"  placeholder="Age"  id="addAge">
+                                </div>
+                            </div>
+                            <div class = "form-group">
+                                <div class = "col-3 mx-auto">
+                                    <strong><label for = "addEmail">Email </label> </strong>
+                                    <input type = "text" class="form-control"  placeholder="Email" id="addEmail">
+                                </div>
+                            </div>
+                            <div class = "form-group">
+                                <div class = "col-3 mx-auto">
+                                    <strong><label for = "addPassword">Password </label> </strong>
+                                    <input type required = "password" class="form-control"  placeholder="Password" id="addPassword">
+                                </div>
+                            </div>
+                            <div class = "form-group">
+                                <div class = "col-3 mx-auto">
+                                    <strong><label>Roles</label> </strong>
+                                    <select multiple class="form-control " size = "1" id = "rolesAdd" name = "roles" >
+                                        <option>ADMIN</option>
+                                        <option>USER</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-success addSuccess">Add user</button>
+
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script type="text/javascript" src="/userInfoAdminVer.js"></script>
+<script type="text/javascript" src="/newAdminTab.js"></script>
+<script type="text/javascript" src="/roles.js"></script>
+</body>
