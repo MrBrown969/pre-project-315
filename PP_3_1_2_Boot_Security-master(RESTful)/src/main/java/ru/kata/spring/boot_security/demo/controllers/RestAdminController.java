@@ -29,13 +29,13 @@ public class RestAdminController {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/users/{id}")
     public User getUser(@PathVariable("id") int id) {
         User user = userService.getUserById(id);
         return user;
     }
 
-    @PostMapping
+    @PostMapping("/users")
     public ResponseEntity<User> addUser(@RequestBody User user, @RequestParam(required = false
             , name = "selectedRoles") String[] selectedRoles) {
         HashSet<Role> addRoles = new HashSet<>();
@@ -52,7 +52,7 @@ public class RestAdminController {
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
-    @PatchMapping("/edit")
+    @PatchMapping("/users")
     public ResponseEntity<User> patchUser(@RequestBody User user, @RequestParam(required = false
             , name = "selectedRoles") String[] selectedRoles) {
         HashSet<Role> editRoles = new HashSet<>();
@@ -70,24 +70,24 @@ public class RestAdminController {
     }
 
 
-    @DeleteMapping ("/delete")
-    public void delete(@RequestParam(required = true, name = "deleteId") Integer id) {
+    @DeleteMapping ("/users/{deleteId}")
+    public void delete(@PathVariable(required = true, name = "deleteId") Integer id) {
         userService.deleteUser(id);
     }
 
 
-    @GetMapping("/thisUser")
+    @GetMapping("/currentUser")
     @ResponseBody
-    public ResponseEntity<User> currentClient(@AuthenticationPrincipal User user) {
+    public ResponseEntity<User> currentUser(@AuthenticationPrincipal User user) {
         return new ResponseEntity<>(userService.getUserById(user.getId()), HttpStatus.OK) ;
     }
 
-    @GetMapping("/userInfo")
+    @GetMapping("/users/roles")
     @ResponseBody
     public String roles(@AuthenticationPrincipal User user) {
         String roles = new String();
         for(Role r: user.getRoles()){
-            roles += r.toString() + " ";
+            roles += r.toString();
         }
         return roles;
     }

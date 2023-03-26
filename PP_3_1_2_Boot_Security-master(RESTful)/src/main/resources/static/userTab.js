@@ -1,8 +1,7 @@
-fetch("http://localhost:8080/api/thisUser")
+fetch("http://localhost:8080/api/currentUser")
     .then(res => res.json())
     .then(user => {
 
-//todo fields name problem?
         document.getElementById('id').innerText = user.id;
         document.getElementById('firstname').innerText = user.name;
         document.getElementById('lastname').innerText = user.surname;
@@ -11,7 +10,7 @@ fetch("http://localhost:8080/api/thisUser")
         document.getElementById('current_user').innerText = user.email;
 
     })
-fetch("http://localhost:8080/api/userInfo")//todo: rename fields
+fetch("http://localhost:8080/api/users/roles")
     .then(res => res.text())
     .then(res => {
         document.getElementById("roles").innerText = res;
